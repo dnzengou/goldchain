@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldChain Afrique - Mind Map</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #mindmap {
+            width: 90%; /* Increased width for better visibility */
+            height: 80%;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        .toolbar {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10; /* Ensure the toolbar is above other content */
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #1a73e8;
+        }
+    </style>
+
+    <!-- Load D3 and Markmap -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.14.4/dist/index.umd.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.14.4/dist/style.css">
+</head>
+<body>
+    <h1>GoldChain Afrique</h1>
+    <svg id="mindmap"></svg>
+
+    <script>
+        const markdown = `
+# GoldChain Afrique
+
+## Fondation (Mois 1-6)
+- Établir des partenariats
+- Développer des cadres réglementaires
+- Construire l'infrastructure blockchain
+- Mettre en place des protocoles d'audit
+
+## Lancement (Mois 7-12)
+- Émettre des jetons et stablecoins adossés à l'or
+- Lancer une bourse décentralisée
+- Intégrer avec des bourses externes
+- Mettre en œuvre des programmes éducatifs
+
+## Expansion (Mois 13-24)
+- Étendre à d'autres pays
+- Développer des fonctionnalités avancées
+        `;
+
+        const { Markmap } = window.markmap;
+
+        // Initialize and setup the mind map
+        const svg = document.querySelector('#mindmap');
+        const mm = Markmap.create(svg, {
+            autoFit: true,
+            color: (node) => {
+                if (node.depth === 0) return '#1a73e8'; // Primary for root
+                if (node.depth === 1) return '#e8710a'; // Secondary for first level
+                return '#39a845'; // Tertiary color for subsequent levels
+            },
+        });
+
+        // Transform and settings for the mind map data
+        const data = await Markmap.transform(markdown);
+        mm.setData(data);
+
+        // Render the toolbar
+        const toolbar = new window.markmap.Toolbar();
+        toolbar.attach(mm);
+        document.body.appendChild(toolbar.render());
+    </script>
+</body>
+</html>

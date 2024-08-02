@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Mind Map</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .node {
+            cursor: pointer;
+            transition: all 0.3s; /* Smooth transition */
+        }
+
+        .node circle {
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 3px;
+            transition: fill 0.3s;
+        }
+
+        .node:hover circle {
+            fill: #4CAF50; /* Change fill on hover */
+        }
+
+        .node text {
+            font: 12px sans-serif;
+            fill: #333;
+        }
+
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Mind map data structure
+        const data = {
+            name: "GoldChain Afrique",
+            children: [
+                {
+                    name: "Fondation (Mois 1-6)",
+                    children: [
+                        { name: "Établir des partenariats" },
+                        { name: "Développer des cadres réglementaires" },
+                        { name: "Construire l'infrastructure blockchain" },
+                        { name: "Mettre en place des protocoles d'audit" }
+                    ]
+                },
+                {
+                    name: "Lancement (Mois 7-12)",
+                    children: [
+                        { name: "Émettre des jetons et stablecoins adossés à l'or" },
+                        { name: "Lancer une bourse décentralisée" },
+                        { name: "Intégrer avec des bourses externes" },
+                        { name: "Mettre en œuvre des programmes éducatifs" }
+                    ]
+                },
+                {
+                    name: "Expansion (Mois 13-24)",
+                    children: [
+                        { name: "Étendre à d'autres pays" },
+                        { name: "Développer des fonctionnalités avancées" }
+                    ]
+                }
+            ]
+        };
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // Create SVG element
+        const svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        const g = svg.append("g").attr("transform", "translate(80,40)");
+
+        const tree = d3.tree().size([height - 100, width - 160]);
+
+        const root = d3.hierarchy(data);
+        tree(root);
+
+        // Links (connections)
+        const link = g.selectAll(".link")
+            .data(root.links())
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("d", d => `
+                M${d.target.y},${d.target.x}
+                C${(d.target.y + d.source.y) / 2},${d.target.x}
+                 ${(d.target.y + d.source.y) / 2},${d.source.x}
+                 ${d.source.y},${d.source.x}
+            `);
+
+        // Nodes
+        const node = g.selectAll(".node")
+            .data(root.descendants())
+            .enter().append("g")
+            .attr("class", d => "node" + (d.children ? " node--internal" : " node--leaf"))
+            .attr("transform", d => `translate(${d.y},${d.x})`)
+            .on("click", (event, d) => {
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                } else {
+                    d.children = d._children;
+                    d._children = null;
+                }
+                update(root);
+            });
+
+        node.append("circle").attr("r", 10);
+
+        node.append("text")
+            .attr("dy", 3)
+            .attr("x", d => d.children ? -12 : 12)
+            .style("text-anchor", d => d.children ? "end" : "start")
+            .text(d => d.data.name)
+            .clone(true).lower()
+            .attr("stroke", "white");
+
+        // Update the tree
+        function update(source) {
+            const nodes = tree(root);
+
+            // Update the positions of the nodes
+            const nodeUpdate = g.selectAll(".node")
+                .data(nodes.descendants(), d => d.data.name);
+
+            nodeUpdate.transition()
+                .duration(500)
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            link.transition()
+                .duration(500)
+                .attr("d", d => `
+                    M${d.target.y},${d.target.x}
+                    C${(d.target.y + d.source.y) / 2},${d.target.x}
+                     ${(d.target.y + d.source.y) / 2},${d.source.x}
+                     ${d.source.y},${d.source.x}
+                `);
+        }
+
+        // Add zoom functionality
+        const zoom = d3.zoom()
+            .scaleExtent([0.5, 2])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
+
+        // Responsive design on resize
+        window.addEventListener("resize", () => {
+            svg.attr("width", window.innerWidth)
+               .attr("height", window.innerHeight);
+            update(root);
+        });
+    </script>
+</body>
+</html>

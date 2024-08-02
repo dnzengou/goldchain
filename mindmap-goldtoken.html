@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldChain Afrique - RealConnect Mind Map</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.14.4/dist/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+        
+        #mind-map {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .node circle {
+            fill: #fff;
+            stroke: #4CAF50;
+            stroke-width: 3px;
+        }
+        
+        .node text {
+            font: 12px sans-serif;
+            fill: #333;
+        }
+        
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2px;
+        }
+        
+        .node:hover circle {
+            fill: #4CAF50;
+        }
+        
+        .node:hover text {
+            font-weight: bold;
+        }
+
+        .toolbar {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #1a73e8;
+        }   
+    </style>
+</head>
+<body>
+    <h1>GoldChain Afrique & RealConnect</h1>
+    <div id="mind-map"></div>
+
+    <script>
+        const data = {
+            name: "GoldChain Afrique",
+            children: [
+                {
+                    name: "Fondation (Mois 1-6)",
+                    children: [
+                        { name: "Établir des partenariats" },
+                        { name: "Développer des cadres réglementaires" },
+                        { name: "Construire l'infrastructure blockchain" },
+                        { name: "Mettre en place des protocoles d'audit" }
+                    ]
+                },
+                {
+                    name: "Lancement (Mois 7-12)",
+                    children: [
+                        { name: "Émettre des jetons et stablecoins adossés à l'or" },
+                        { name: "Lancer une bourse décentralisée" },
+                        { name: "Intégrer avec des bourses externes" },
+                        { name: "Mettre en œuvre des programmes éducatifs" }
+                    ]
+                },
+                {
+                    name: "Expansion (Mois 13-24)",
+                    children: [
+                        { name: "Étendre à d'autres pays" },
+                        { name: "Développer des fonctionnalités avancées" }
+                    ]
+                },
+                {
+                    name: "Platform Development",
+                    children: [
+                        { name: "Core marketplace functionality" },
+                        { name: "User interfaces" },
+                        { name: "Data analytics engine" },
+                        { name: "AI matchmaking algorithms" },
+                        { name: "Tokenization and blockchain integration" }
+                    ]
+                },
+                {
+                    name: "Data Aggregation",
+                    children: [
+                        { name: "Property listings" },
+                        { name: "Land utilization data" },
+                        { name: "Market trends and pricing" },
+                        { name: "Demographic information" }
+                    ]
+                },
+                {
+                    name: "Financial Integration",
+                    children: [
+                        { name: "Bank partnerships" },
+                        { name: "Loan pre-qualification tools" },
+                        { name: "Investment calculators" },
+                        { name: "Crowdfunding platform" }
+                    ]
+                },
+                {
+                    name: "User Acquisition",
+                    children: [
+                        { name: "Marketing campaigns" },
+                        { name: "Partnerships with real estate agencies" },
+                        { name: "Government collaborations" },
+                        { name: "Educational content and workshops" }
+                    ]
+                },
+                {
+                    name: "Regulatory Compliance",
+                    children: [
+                        { name: "Data protection measures" },
+                        { name: "Financial regulations" },
+                        { name: "Real estate laws and policies" }
+                    ]
+                },
+                {
+                    name: "Expansion",
+                    children: [
+                        { name: "Geographic (beyond Kigali)" },
+                        { name: "Product features" },
+                        { name: "Additional services" }
+                    ]
+                }
+            ]
+        };
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        const svg = d3.select("#mind-map")
+            .append("svg")
+            .attr("viewBox", `0 0 ${width} ${height}`)
+            .attr("preserveAspectRatio", "xMidYMid meet");
+
+        const g = svg.append("g");
+
+        const tree = d3.tree().size([2 * Math.PI, Math.min(width, height) / 2 - 100]);
+
+        const root = d3.hierarchy(data);
+        tree(root);
+
+        const link = g.selectAll(".link")
+            .data(root.links())
+            .join("path")
+            .attr("class", "link")
+            .attr("d", d3.linkRadial()
+                .angle(d => d.x)
+                .radius(d => d.y));
+
+        const node = g.selectAll(".node")
+            .data(root.descendants())
+            .join("g")
+            .attr("class", "node")
+            .attr("transform", d => `
+                rotate(${d.x * 180 / Math.PI - 90})
+                translate(${d.y},0)
+            `);
+
+        node.append("circle")
+            .attr("r", 5);
+
+        node.append("text")
+            .attr("dy", "0.31em")
+            .attr("x", d => d.x < Math.PI === !d.children ? 6 : -6)
+            .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
+            .attr("transform", d => d.x >= Math.PI ? "rotate(180)" : null)
+            .text(d => d.data.name)
+            .clone(true).lower()
+            .attr("stroke", "white");
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.5, 2])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
+
+        // Initial zoom to fit the content
+        const bounds = g.node().getBBox();
+        const fullWidth = bounds.width;
+        const fullHeight = bounds.height;
+        const scale = Math.min(width / fullWidth, height / fullHeight) * 0.9;
+        const x = width / 2 - (bounds.x + fullWidth / 2) * scale;
+        const y = height / 2 - (bounds.y + fullHeight / 2) * scale;
+        svg.call(zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
+
+        function resizeChart() {
+            const newWidth = window.innerWidth;
+            const newHeight = window.innerHeight;
+            svg.attr("viewBox", `0 0 ${newWidth} ${newHeight}`);
+        }
+
+        window.addEventListener("resize", resizeChart);
+    </script>
+</body>
+</html>
