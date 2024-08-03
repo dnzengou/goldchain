@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Gantt Chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dhtmlx-gantt/6.4.4/dhtmlxgantt.css" />
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            color: #000;
+        }
+
+        #ganttChart {
+            width: 100%;
+            height: 600px;
+            background-color: white;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
+        .axis-label {
+            font: 10px sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-4">
+        <h1 class="text-center">Goldchain Africa Gantt Chart</h1>
+        <div id="ganttChart">
+        <svg width="960" height="500"></svg>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dhtmlx-gantt/6.4.4/dhtmlxgantt.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Define Gantt chart data
+        const tasks = {
+            data: [
+                { id: 1, text: "Platform Development and Data Collection", start_date: "2024-09-01", duration: 12, progress: 0.5 },
+                { id: 2, text: "Develop core digital platform", start_date: "2024-09-01", duration: 6, progress: 0.5, parent: 1 },
+                { id: 3, text: "Integrate data collection and analytics tools", start_date: "2024-09-15", duration: 5, progress: 0.4, parent: 1 },
+                { id: 4, text: "Partner with government agencies", start_date: "2024-10-01", duration: 6, progress: 0.3, parent: 1 },
+                { id: 5, text: "Implement basic search and matching algorithms", start_date: "2024-11-01", duration: 6, progress: 0.2, parent: 1 },
+                { id: 6, text: "Financial Integration and User Acquisition", start_date: "2025-04-01", duration: 12, progress: 0 },
+                { id: 7, text: "Integrate with banks and financial institutions", start_date: "2025-04-01", duration: 6, progress: 0, parent: 6 },
+                { id: 8, text: "Develop investment calculators", start_date: "2025-04-15", duration: 5, progress: 0, parent: 6 },
+                { id: 9, text: "Implement affordability calculators", start_date: "2025-05-15", duration: 5, progress: 0, parent: 6 },
+                { id: 10, text: "Launch marketing campaigns", start_date: "2025-06-01", duration: 5, progress: 0, parent: 6 },
+                { id: 11, text: "Pilot fractional investment opportunities", start_date: "2025-07-01", duration: 5, progress: 0, parent: 6 },
+            ]
+        };
+
+        const svg = d3.select("svg"),
+            margin = { top: 20, right: 20, bottom: 20, left: 250 },
+            width = +svg.attr("width") - margin.left - margin.right,
+            height = +svg.attr("height") - margin.top - margin.bottom;
+
+        const x = d3.scaleTime().range([0, width]);
+        const y = d3.scaleBand().range([0, height]).padding(0.1);
+
+        const g = svg.append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const parseTime = d3.timeParse("%Y-%m-%d");
+
+        tasks.data.forEach(d => {
+            d.start_date = parseTime(d.start_date);
+            d.end_date = new Date(d.start_date);
+            d.end_date.setMonth(d.end_date.getMonth() + d.duration);
+        });
+
+        x.domain([d3.min(tasks.data, d => d.start_date), d3.max(tasks.data, d => d.end_date)]);
+        y.domain(tasks.data.map(d => d.text));
+
+        g.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x));
+
+        g.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(y));
+
+        g.selectAll(".bar")
+            .data(tasks.data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d.start_date))
+            .attr("y", d => y(d.text))
+            .attr("width", d => x(d.end_date) - x(d.start_date))
+            .attr("height", y.bandwidth())
+            .append("title")
+            .text(d => `${d.text}: ${d.progress * 100}% complete`);
+        
+
+        // Initialize Gantt chart
+        /*gantt.init("ganttChart");
+        gantt.parse(tasks);*/
+
+        // Make Gantt chart interactive
+        /*gantt.attachEvent("onTaskClick", function(id) {
+            const task = gantt.getTask(id);
+            alert(`Task: ${task.text}\nStart Date: ${task.start_date}\nDuration: ${task.duration} days`);
+            return true; // Allow default behavior
+        });*/
+
+        // Enable task dragging and dropping
+        /*gantt.config.drag_create = true;
+        gantt.config.drag_move = true;
+        gantt.config.drag_progress = true;*/
+    </script>
+</body>
+</html>
