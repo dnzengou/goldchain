@@ -43,24 +43,54 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <script>
         // Define Gantt chart data
+        /*
+        # GoldChain Africa
+
+## Fondation (mois 1 à 6)
+- Établir des partenariats
+- Développer des cadres réglementaires
+- Mettre en œuvre des programmes d'éducation
+- Construire une infrastructure blockchain
+- Mettre en œuvre des protocoles d'audit
+
+## Lancement (mois 7 à 12)
+- Émettre des jetons et des pièces stables adossés à l'or
+- Délivrer des programmes périodiques d'éducation
+- Lancer une bourse décentralisée
+- Intégrer des bourses externes
+- Mettre en œuvre des programmes d'éducation
+
+## Expansion (mois 13 à 24)
+- Élargir à d'autres pays
+- Développer des fonctionnalités avancées
+- Intégrer des systèmes internationaux
+- Explorer d'autres tokenisations de ressources
+        */
+        
         const tasks = {
             data: [
-                { id: 1, text: "Platform Development and Data Collection", start_date: "2024-09-01", duration: 12, progress: 0.5 },
-                { id: 2, text: "Develop core digital platform", start_date: "2024-09-01", duration: 6, progress: 0.5, parent: 1 },
-                { id: 3, text: "Integrate data collection and analytics tools", start_date: "2024-09-15", duration: 5, progress: 0.4, parent: 1 },
-                { id: 4, text: "Partner with government agencies", start_date: "2024-10-01", duration: 6, progress: 0.3, parent: 1 },
-                { id: 5, text: "Implement basic search and matching algorithms", start_date: "2024-11-01", duration: 6, progress: 0.2, parent: 1 },
-                { id: 6, text: "Financial Integration and User Acquisition", start_date: "2025-04-01", duration: 12, progress: 0 },
-                { id: 7, text: "Integrate with banks and financial institutions", start_date: "2025-04-01", duration: 6, progress: 0, parent: 6 },
-                { id: 8, text: "Develop investment calculators", start_date: "2025-04-15", duration: 5, progress: 0, parent: 6 },
-                { id: 9, text: "Implement affordability calculators", start_date: "2025-05-15", duration: 5, progress: 0, parent: 6 },
-                { id: 10, text: "Launch marketing campaigns", start_date: "2025-06-01", duration: 5, progress: 0, parent: 6 },
-                { id: 11, text: "Pilot fractional investment opportunities", start_date: "2025-07-01", duration: 5, progress: 0, parent: 6 },
+                { id: 1, text: "Fondation (mois 1 à 6)", start_date: "2024-10-01", duration: 6, progress: 0.2 },
+                { id: 2, text: "Établir des partenariats", start_date: "2024-10-01", duration: 4, progress: 0.2, parent: 1 },
+                { id: 3, text: "Développer des cadres réglementaires", start_date: "2024-11-01", duration: 3, progress: 0.6, parent: 1 },
+                { id: 10, text: "Mettre en œuvre des programmes d'éducation", start_date: "2024-11-15", duration: 3, progress: 0.1, parent: 1 },
+                { id: 4, text: "Construire une infrastructure blockchain", start_date: "2024-12-01", duration: 4, progress: 0, parent: 1 },
+                { id: 5, text: "Mettre en œuvre des protocoles d'audit", start_date: "2025-01-01", duration: 3, progress: 0, parent: 1 },
+                
+                { id: 6, text: "Lancement (mois 7 à 12)", start_date: "2025-02-01", duration: 12, progress: 0 },
+                { id: 7, text: "Émettre des jetons et des pièces stables adossés à l'or", start_date: "2025-02-15", duration: 6, progress: 0, parent: 6 },
+                { id: 10, text: "Délivrer des programmes périodiques d'éducation", start_date: "2025-03-15", duration: 9, progress: 0.1, parent: 1 },
+                { id: 8, text: "Lancer une bourse décentralisée", start_date: "2025-06-15", duration: 5, progress: 0, parent: 6 },
+                { id: 9, text: "Intégrer des bourses externes", start_date: "2025-07-15", duration: 5, progress: 0, parent: 6 },
+                { id: 11, text: "Expansion (mois 13 à 24)", start_date: "2026-03-01", duration: 11, progress: 0},
+                { id: 8, text: "Élargir à d'autres pays", start_date: "2026-03-15", duration: 6, progress: 0, parent: 11 },
+                { id: 9, text: "Développer des fonctionnalités avancées", start_date: "2026-06-15", duration: 5, progress: 0, parent: 11 },
+                { id: 10, text: "Intégrer des systèmes internationaux", start_date: "2026-07-01", duration: 6, progress: 0, parent: 11 },
+                { id: 11, text: "Explorer d'autres tokenisations de ressources", start_date: "2026-08-01", duration: 6, progress: 0, parent: 11 },
             ]
         };
 
         const svg = d3.select("svg"),
-            margin = { top: 20, right: 20, bottom: 20, left: 250 },
+            margin = { top: 20, right: 20, bottom: 20, left: 300 },
             width = +svg.attr("width") - margin.left - margin.right,
             height = +svg.attr("height") - margin.top - margin.bottom;
 
