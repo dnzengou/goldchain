@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Mind Map</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .node {
+            cursor: pointer;
+            transition: all 0.3s; /* Smooth transition */
+        }
+
+        .node circle {
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 3px;
+            transition: fill 0.3s;
+        }
+
+        .node:hover circle {
+            fill: #4CAF50; /* Change fill on hover */
+        }
+
+        .node text {
+            font: 12px sans-serif;
+            fill: #333;
+        }
+
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Mind map data structure
+        const data = {
+  "name": "Démarrer sur la blockchain",
+  "children": [
+    {
+      "name": "Niveau débutant (niveau d'entrée) - 1 mois",
+      "children": [
+        {
+          "name": "Objectif",
+          "children": [
+            { "name": "Fournir des connaissances de base sur la technologie blockchain." }
+          ]
+        },
+        {
+          "name": "Modules",
+          "children": [
+            { "name": "Introduction à la technologie blockchain", "children": [
+              { "name": "Qu'est-ce que la blockchain ?" },
+              { "name": "Contexte historique et évolution" }
+            ] },
+            { "name": "Principes fondamentaux de la blockchain", "children": [
+              { "name": "Concepts de base : blocs, chaînes, registres" },
+              { "name": "Fonctionnement de la blockchain : transactions, réseaux distribués, nœuds" }
+            ] },
+            { "name": "Types de blockchains", "children": [
+              { "name": "Blockchain publique, privée, consortium" },
+              { "name": "Exemples : Bitcoin, Ethereum, Hyperledger" }
+            ] },
+            { "name": "Introduction aux crypto-monnaies", "children": [
+              { "name": "Qu'est-ce que la crypto-monnaie ?" },
+              { "name": "Cryptomonnaies populaires : Bitcoin, Ethereum" }
+            ] },
+            { "name": "Cas d'utilisation de la blockchain", "children": [
+              { "name": "Applications concrètes : chaîne d'approvisionnement, santé, finance, immobilier" },
+              { "name": "Cas d'utilisation de la blockchain dans les économies émergentes" }
+            ] },
+            { "name": "Principes de base de la sécurité et de la confidentialité", "children": [
+              { "name": "Clés publiques et privées" },
+              { "name": "Concepts de base de la cryptographie" },
+              { "name": "Principes de base de la sécurité de la blockchain" }
+            ] },
+            { "name": "Introduction aux portefeuilles et aux échanges numériques" },
+            { "name": "Introduction aux contrats intelligents" },
+            { "name": "Présentation des pièces stables et de leur importance" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Niveau intermédiaire (praticiens) - 1 à 2 mois",
+      "children": [
+        {
+          "name": "Objectif",
+          "children": [
+            { "name": "Améliorer la compréhension pratique et l'application de la technologie blockchain." }
+          ]
+        },
+        {
+          "name": "Modules",
+          "children": [
+            { "name": "Mécanique avancée de la blockchain", "children": [
+              { "name": "Plongée en profondeur dans l'architecture de la blockchain" },
+              { "name": "Étude détaillée des nœuds et des types de réseaux" }
+            ] },
+            { "name": "Algorithmes de consensus", "children": [
+              { "name": "Preuve de travail (PoW)" },
+              { "name": "Preuve d'enjeu (PoS)" },
+              { "name": "Preuve d'enjeu déléguée (DPoS)" }
+            ] },
+            { "name": "Contrats intelligents", "children": [
+              { "name": "Que sont les contrats intelligents ?" },
+              { "name": "Développement et déploiement de contrats intelligents sur Ethereum" },
+              { "name": "Développement de contrats intelligents (de base)" }
+            ] },
+            { "name": "Ethereum et Solidity", "children": [
+              { "name": "Introduction à la programmation Solidity" },
+              { "name": "Écriture et test de contrats intelligents" }
+            ] },
+            { "name": "Plateformes Blockchain", "children": [
+              { "name": "Comparaison des plateformes Blockchain : Bitcoin, Ethereum, Solana, Avalanche, EOS" }
+            ] },
+            { "name": "Environnement réglementaire", "children": [
+              { "name": "Lutte contre le blanchiment d'argent (AML) et connaissance du client (KYC)" },
+              { "name": "Réglementations gouvernementales et gouvernance de la blockchain" },
+              { "name": "Aspects juridiques et réglementaires de la blockchain en Afrique" }
+            ] },
+            { "name": "Projets pratiques", "children": [
+              { "name": "Créer et déployer une Dapp simple (application décentralisée)" },
+              { "name": "Études de cas sur les implémentations de la blockchain" },
+              { "name": "Blockchain pour la chaîne d'approvisionnement et la logistique" }
+            ] },
+            { "name": "Fondamentaux de la DeFi (finance décentralisée)" },
+            { "name": "Stablecoins et jetons adossés à des actifs : analyse approfondie" },
+            { "name": "Tokenisation des actifs : concepts et applications" },
+            { "name": "Stratégies avancées de trading et d'investissement en crypto-monnaie" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Niveau avancé (spécialistes) - 1 à 2 mois",
+      "children": [
+        {
+          "name": "Objectif",
+          "children": [
+            { "name": "Fournir une expertise et des connaissances spécialisées pour devenir un spécialiste de la blockchain." }
+          ]
+        },
+        {
+          "name": "Modules",
+          "children": [
+            { "name": "Sujets avancés sur la blockchain", "children": [
+              { "name": "Architecture technique et complexités" },
+              { "name": "Défis d'évolutivité et d'interopérabilité" }
+            ] },
+            { "name": "Mécanismes de consensus avancés", "children": [
+              { "name": "Tolérance aux pannes byzantines" },
+              { "name": "Preuve d'autorité" },
+              { "name": "Modèles hybrides" }
+            ] },
+            { "name": "Solutions de blockchain d'entreprise", "children": [
+              { "name": "Hyperledger Fabric" },
+              { "name": "Architecture Corda" },
+              { "name": "Création de solutions de blockchain pour les entreprises" }
+            ] },
+            { "name": "Cryptographie dans la blockchain", "children": [
+              { "name": "SHA256, ECDSA, preuves à connaissance nulle" },
+              { "name": "Mécanismes de chiffrement avancés et protocoles cryptographiques" }
+            ] },
+            { "name": "Concepts avancés des contrats intelligents", "children": [
+              { "name": "Problèmes de sécurité et meilleures pratiques" },
+              { "name": "Méthodes de vérification formelle" },
+              { "name": "Développement et audit avancés de contrats intelligents" }
+            ] },
+            { "name": "Considérations réglementaires et éthiques", "children": [
+              { "name": "Impact sur la confidentialité et la protection des données" },
+              { "name": "Implications éthiques de la blockchain" },
+              { "name": "Modèles de gouvernance de la blockchain" }
+            ] },
+            { "name": "Tendances et innovations futures", "children": [
+              { "name": "Développements potentiels dans la technologie blockchain" },
+              { "name": "Intégration avec les technologies émergentes : IoT, IA, informatique quantique" }
+            ] },
+            { "name": "Projet de fin d'études", "children": [
+              { "name": "Mise en œuvre de bout en bout d'une solution Blockchain complexe" },
+              { "name": "Laboratoire d'innovation et de résolution de problèmes concrets" }
+            ] }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // Create SVG element
+        const svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        const g = svg.append("g").attr("transform", "translate(80,40)");
+
+        const tree = d3.tree().size([height - 100, width - 500]);
+
+        const root = d3.hierarchy(data);
+        tree(root);
+
+        // Links (connections)
+        const link = g.selectAll(".link")
+            .data(root.links())
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("d", d => `
+                M${d.target.y},${d.target.x}
+                C${(d.target.y + d.source.y) / 2},${d.target.x}
+                 ${(d.target.y + d.source.y) / 2},${d.source.x}
+                 ${d.source.y},${d.source.x}
+            `);
+
+        // Nodes
+        const node = g.selectAll(".node")
+            .data(root.descendants())
+            .enter().append("g")
+            .attr("class", d => "node" + (d.children ? " node--internal" : " node--leaf"))
+            .attr("transform", d => `translate(${d.y},${d.x})`)
+            .on("click", (event, d) => {
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                } else {
+                    d.children = d._children;
+                    d._children = null;
+                }
+                update(root);
+            });
+
+        node.append("circle").attr("r", 10);
+
+        node.append("text")
+            .attr("dy", 3)
+            .attr("x", d => d.children ? -12 : 12)
+            .style("text-anchor", d => d.children ? "end" : "start")
+            .text(d => d.data.name)
+            .clone(true).lower()
+            .attr("stroke", "white");
+
+        // Update the tree
+        function update(source) {
+            const nodes = tree(root);
+
+            // Update the positions of the nodes
+            const nodeUpdate = g.selectAll(".node")
+                .data(nodes.descendants(), d => d.data.name);
+
+            nodeUpdate.transition()
+                .duration(500)
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            link.transition()
+                .duration(500)
+                .attr("d", d => `
+                    M${d.target.y},${d.target.x}
+                    C${(d.target.y + d.source.y) / 2},${d.target.x}
+                     ${(d.target.y + d.source.y) / 2},${d.source.x}
+                     ${d.source.y},${d.source.x}
+                `);
+        }
+
+        // Add zoom functionality
+        const zoom = d3.zoom()
+            .scaleExtent([0.5, 2])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
+
+        // Responsive design on resize
+        window.addEventListener("resize", () => {
+            svg.attr("width", window.innerWidth)
+               .attr("height", window.innerHeight);
+            update(root);
+        });
+    </script>
+</body>
+</html>
